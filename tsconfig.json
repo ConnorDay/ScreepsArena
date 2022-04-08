@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "rootDir": "src",
+        "moduleResolution": "Node",
+        "target": "es2020",
+        "lib": [
+        "es2020", "DOM"
+        ],
+        "module": "ES2020",
+        "sourceMap": true,
+        "strict": true,
+        "experimentalDecorators": true,
+        "noImplicitReturns": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": false,
+        "typeRoots": ["./node_modules/@types", "./@types", "./node_modules/@types/screeps-arena/dist"]
+    },
+    "type": "module",
+    "exclude": ["node_modules"],
+    "include": ["src", "build"]
+}
