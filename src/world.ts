@@ -1,11 +1,12 @@
 import { Flag } from "arena";
 import { Creep, StructureTower } from "game/prototypes";
 import { getObjectsByPrototype } from "game/utils";
+import { BaseCreep } from "./basecreep";
 import { Tower } from "./tower";
 
 class worldClass {
-	allies: Creep[] = [];
-	enemies: Creep[] = [];
+	allies: BaseCreep[] = [];
+	enemies: BaseCreep[] = [];
 	myTowers: Tower[] = [];
 	enemyTowers: Tower[] = [];
 	myStoredFlag: Flag | undefined;

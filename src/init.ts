@@ -1,11 +1,12 @@
 import { Flag } from "arena/prototypes";
 import { Creep, StructureTower } from "game/prototypes";
 import { getObjectsByPrototype } from "game/utils";
+import { BaseCreep } from "./basecreep";
 import { Tower } from "./tower";
 import { World } from "./world";
 
 export function init() {
-	const creeps = getObjectsByPrototype(Creep);
+	const creeps = getObjectsByPrototype(Creep).map((c) => new BaseCreep(c));
 	World.allies = creeps.filter((c) => c.my);
 	World.enemies = creeps.filter((c) => !c.my);
 
