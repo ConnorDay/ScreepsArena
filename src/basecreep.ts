@@ -1,5 +1,7 @@
 import {
 	AnyCreep,
+	ATTACK,
+	ATTACK_POWER,
 	BodyPartConstant,
 	CreepActionReturnCode,
 	CreepMoveReturnCode,
@@ -10,15 +12,38 @@ import {
 	ERR_NO_BODYPART,
 	ERR_NO_PATH,
 	OK,
+	RANGED_ATTACK,
+	RANGED_ATTACK_POWER,
 	ResourceConstant,
 } from "game/constants";
 import { MoveToOpts } from "game/path-finder";
-import { Creep, RoomPosition, Store, Structure } from "game/prototypes";
+import {
+	Creep,
+	RoomPosition,
+	Store,
+	Structure,
+	StructureTower,
+} from "game/prototypes";
+import { getRange, getTicks } from "game/utils";
 import { World } from "./world";
+
+interface possibleDamage {
+	melee: number;
+	ranged: number;
+}
 
 class BaseCreep extends Creep {
 	//Extend creep so that we can just pass BaseCreep in to attack/ heal targets
 	private _primativeCreep: Creep;
+
+	private _attackDamageUpdated: number = 0;
+	private _possibleDamage: possibleDamage = {
+		melee: 0,
+		ranged: 0,
+	};
+
+	private _dangerUpdated: number = 0;
+	private _danger: number = 0;
 	constructor(creep: Creep) {
 		super();
 		this._primativeCreep = creep;
@@ -26,6 +51,73 @@ class BaseCreep extends Creep {
 
 	public run() {
 		this.moveTo(World.enemyFlag);
+	}
+
+	public hasPart(part: BodyPartConstant): boolean {
+		return this.body.some((bp) => {
+			return bp.type == part;
+		});
+	}
+
+	public getDamageToTarget(target: AnyCreep | Structure): number {
+		const dist = getRange(this, target);
+		if (dist > 3) {
+			return 0;
+		}
+
+		let damage = 0;
+		damage += this.possibleDamage.ranged;
+
+		if (dist === 1) {
+			damage += this.possibleDamage.melee;
+		}
+
+		return damage;
+	}
+
+	public get danger(): number {
+		if (this._dangerUpdated === getTicks()) {
+			return this._danger;
+		}
+
+		let damageThreat = 0;
+		World.enemies.forEach((enemy) => {
+			damageThreat += enemy.getDamageToTarget(this);
+		});
+
+		const damagePercent = damageThreat / this.hits;
+		const damageTaken = this.hitsMax - this.hits;
+		const danger = damageTaken + damageTaken * damagePercent;
+
+		this._danger = danger;
+		this._dangerUpdated = getTicks();
+		return danger;
+	}
+
+	public get possibleDamage(): possibleDamage {
+		if (this._attackDamageUpdated === getTicks()) {
+			return this._possibleDamage;
+		}
+
+		let meleeParts = 0;
+		let rangedParts = 0;
+
+		this.body.forEach((part) => {
+			if (part.hits > 0) {
+				if (part.type === ATTACK) {
+					meleeParts++;
+				} else if (part.type === RANGED_ATTACK) {
+					rangedParts++;
+				}
+			}
+		});
+
+		this._possibleDamage = {
+			melee: ATTACK_POWER * meleeParts,
+			ranged: RANGED_ATTACK_POWER * rangedParts,
+		};
+		this._attackDamageUpdated = getTicks();
+		return this._possibleDamage;
 	}
 
 	/////////////////////////////////
