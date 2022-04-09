@@ -84,6 +84,9 @@ class BaseCreep extends Creep {
 		World.enemies.forEach((enemy) => {
 			damageThreat += enemy.getDamageToTarget(this);
 		});
+		World.enemyTowers.forEach((tower) => {
+			damageThreat += tower.getDamageToTarget(this);
+		});
 
 		const damagePercent = damageThreat / this.hits;
 		const damageTaken = this.hitsMax - this.hits;
