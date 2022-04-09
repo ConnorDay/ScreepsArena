@@ -57,6 +57,19 @@ class Tower {
 		return; // c:
 	}
 
+	public getDamageToTarget(target: AnyCreep | Structure): number {
+		const dist = getRange(this, target);
+		if (dist <= 5) {
+			return 600;
+		} else if (dist > 50) {
+			return 0;
+		} else if (dist >= 20) {
+			return 150;
+		}
+
+		return 600 - (dist / 15) * 450;
+	}
+
 	/////////////////////////////////
 	// Mappings to primitive tower //
 	/////////////////////////////////
