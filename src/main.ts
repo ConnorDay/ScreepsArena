@@ -7,6 +7,6 @@ export function loop(){
         init();
     }
 
-    console.log(World);
+    World.myTowers.forEach( t => t.run() );
 
 }
