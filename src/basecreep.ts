@@ -124,7 +124,7 @@ class BaseCreep extends Creep {
 	}
 
 	/////////////////////////////////
-	// Mappings to primitive tower //
+	// Mappings to primitive creep //
 	/////////////////////////////////
 
 	//Getters//
