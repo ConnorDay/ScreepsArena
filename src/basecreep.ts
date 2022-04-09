@@ -14,14 +14,19 @@ import {
 } from "game/constants";
 import { MoveToOpts } from "game/path-finder";
 import { Creep, RoomPosition, Store, Structure } from "game/prototypes";
+import { World } from "./world";
 
-class BaseCreep {
+class BaseCreep extends Creep {
+	//Extend creep so that we can just pass BaseCreep in to attack/ heal targets
 	private _primativeCreep: Creep;
 	constructor(creep: Creep) {
+		super();
 		this._primativeCreep = creep;
 	}
 
-	public run() {}
+	public run() {
+		this.moveTo(World.enemyFlag);
+	}
 
 	/////////////////////////////////
 	// Mappings to primitive tower //

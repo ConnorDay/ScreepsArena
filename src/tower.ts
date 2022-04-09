@@ -1,6 +1,7 @@
 import { AnyCreep, ResourceConstant, ScreepsReturnCode } from "game/constants";
 import { Store, Structure, StructureTower } from "game/prototypes";
 import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
+import { BaseCreep } from "./basecreep";
 import { World } from "./world";
 
 class Tower {
@@ -16,8 +17,8 @@ class Tower {
 	 *  3. Attack any enemy creep that's within 50 tiles and while energy == 100%?
 	 */
 	public run() {
-		const close: AnyCreep[] = [];
-		const targets: AnyCreep[] = [];
+		const close: BaseCreep[] = [];
+		const targets: BaseCreep[] = [];
 
 		//Populate $close and $targets
 		World.enemies.forEach((c) => {
