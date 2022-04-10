@@ -27,6 +27,7 @@ import {
     StructureTower,
 } from "game/prototypes";
 import { getRange, getTicks } from "game/utils";
+import { match } from "ts-pattern";
 import { World } from "../world";
 
 interface possibleDamage {
@@ -143,6 +144,28 @@ class BaseCreep extends Creep {
         return this._loadout;
     }
 
+    public get targets(): BaseCreep[] {
+        let res: BaseCreep[] = [];
+        match(this.loadout)
+            .with(
+                Loadout.BRAWLER,
+                () => (res = this.findInRange(World.enemies, 1))
+            )
+            .with(
+                Loadout.ARCHER,
+                () => (res = this.findInRange(World.enemies, 3))
+            )
+            .with(
+                Loadout.HEALER,
+                () => (res = this.findInRange(World.allies, 3))
+            );
+        return res;
+    }
+
+    public get primitiveCreep(): Creep {
+        return this._primativeCreep;
+    }
+
     /////////////////////////////////
     // Mappings to primitive creep //
     /////////////////////////////////
@@ -210,6 +233,13 @@ class BaseCreep extends Creep {
 
     public rangedHeal(target: AnyCreep): CreepActionReturnCode {
         return this._primativeCreep.rangedHeal(target);
+    }
+
+    public findInRange<T extends RoomPosition>(
+        positions: T[],
+        range: number
+    ): T[] {
+        return this._primativeCreep.findInRange(positions, range);
     }
 }
 

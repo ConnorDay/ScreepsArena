@@ -19,4 +19,9 @@ export function init() {
     const flags = getObjectsByPrototype(Flag);
     World.myStoredFlag = flags.find((f) => f.my);
     World.enemyStoredFlag = flags.find((f) => !f.my);
+    if (World.myFlag.x > 10) {
+        World.bOttOm = true;
+    } else {
+        World.bOttOm = false;
+    }
 }
