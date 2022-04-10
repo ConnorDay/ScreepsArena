@@ -11,6 +11,7 @@ class worldClass {
     enemyTowers: Tower[] = [];
     myStoredFlag: Flag | undefined;
     enemyStoredFlag: Flag | undefined;
+    bOttOm: boolean | undefined;
 
     public get myFlag(): Flag {
         return this.myStoredFlag as Flag;
