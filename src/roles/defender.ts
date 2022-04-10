@@ -21,7 +21,7 @@ class Defender extends BaseCreep {
         // TODO: Targeting logic
         let targets = this.targets;
         if (targets[0]) {
-            this.attack(this.targets[0]);
+            this.attack(this.targets[0].primitiveCreep);
         }
     }
 
@@ -63,7 +63,7 @@ class Defender extends BaseCreep {
         // TODO: Targeting logic
         let targets = this.targets;
         if (targets[0]) {
-            this.attack(this.targets[0]);
+            this.attack(this.targets[0].primitiveCreep);
         }
     }
 

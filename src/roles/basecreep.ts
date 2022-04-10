@@ -204,7 +204,7 @@ class BaseCreep extends Creep {
     }
 
     //Functions//
-    public move(direction: DirectionConstant): CreepMoveReturnCode | undefined {
+    public move(direction: DirectionConstant): CreepMoveReturnCode {
         return this._primativeCreep.move(direction);
     }
 
