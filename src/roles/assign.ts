@@ -1,10 +1,9 @@
 import { Creep } from "game/prototypes";
 import { BaseCreep, Loadout } from "./basecreep";
-import { TestRole } from "./testRole";
+import { Defender } from "./defender";
 
 interface rosterEntry {
     role: any;
-    count: number;
     my: boolean;
     composition: {
         [key in Loadout]: number;
@@ -13,23 +12,22 @@ interface rosterEntry {
 
 const roster: rosterEntry[] = [
     {
-        role: TestRole,
-        count: 7,
+        role: Defender,
         my: true,
 
         composition: {
-            archer: 2,
-            brawler: 0,
-            healer: 1,
+            archer: 1,
+            brawler: 1,
+            healer: 2,
         },
     },
 ];
 
-export function assignCreep(creep: Creep): BaseCreep {
+export function assignCreep(creep: BaseCreep): BaseCreep {
     for (let entry of roster) {
-        if (entry.count > 0) {
-            entry.count--;
-            return new entry.role(creep);
+        if (entry.composition[creep.loadout] > 0) {
+            entry.composition[creep.loadout]--;
+            return new entry.role(creep); //This needs to be updated to the creep.primitave
         }
     }
     return new BaseCreep(creep);

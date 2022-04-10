@@ -7,7 +7,10 @@ import { Tower } from "./tower";
 import { World } from "./world";
 
 export function init() {
-    const creeps = getObjectsByPrototype(Creep).map((c) => assignCreep(c));
+    const creeps = getObjectsByPrototype(Creep)
+        .map((c) => new BaseCreep(c)) //BaseCreep is needed for Loadout
+        .map((bc) => assignCreep(bc));
+
     World.allies = creeps.filter((c) => c.my);
     World.enemies = creeps.filter((c) => !c.my);
 
