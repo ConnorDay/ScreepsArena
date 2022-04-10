@@ -70,10 +70,13 @@ class Defender extends BaseCreep {
         switch (this.loadout) {
             case Loadout.BRAWLER:
                 this.runBrawler();
+                break;
             case Loadout.HEALER:
                 this.runHealer();
+                break;
             case Loadout.ARCHER:
                 this.runArcher();
+                break;
         }
     }
 }
