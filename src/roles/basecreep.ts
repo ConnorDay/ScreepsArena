@@ -21,6 +21,7 @@ import {
 import { MoveToOpts } from "game/path-finder";
 import {
     Creep,
+    Id,
     RoomPosition,
     Store,
     Structure,
@@ -193,6 +194,10 @@ class BaseCreep extends Creep {
 
     public get y(): number {
         return this._primativeCreep.y;
+    }
+
+    public get exists(): boolean {
+        return this._primativeCreep.exists;
     }
 
     //Functions//
