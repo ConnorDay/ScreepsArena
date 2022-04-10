@@ -1,5 +1,4 @@
 import { Creep } from "game/prototypes";
-import { match, P } from "ts-pattern";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
@@ -68,10 +67,14 @@ class Defender extends BaseCreep {
     }
 
     public run() {
-        match(this.loadout)
-            .with(Loadout.BRAWLER, () => this.runBrawler())
-            .with(Loadout.HEALER, () => this.runHealer())
-            .with(Loadout.ARCHER, () => this.runArcher());
+        switch (this.loadout) {
+            case Loadout.BRAWLER:
+                this.runBrawler();
+            case Loadout.HEALER:
+                this.runHealer();
+            case Loadout.ARCHER:
+                this.runArcher();
+        }
     }
 }
 
