@@ -16,9 +16,6 @@ class Defender extends BaseCreep {
     private runBrawler() {
         // Get on top of flag
         this.moveTo(World.myFlag);
-        console.log(
-            "Me Brawler going to: " + World.myFlag.x + ", " + World.myFlag.y
-        );
         // Attack nearby
         // TODO: Targeting logic
         let targets = this.targets;
@@ -38,20 +35,8 @@ class Defender extends BaseCreep {
         } else {
             if (Defender.firstHealer === this) {
                 this.moveTo({ x: World.myFlag.x - 1, y: World.myFlag.y });
-                console.log(
-                    "Me Big Healer going to: " +
-                        (World.myFlag.x - 1) +
-                        ", " +
-                        World.myFlag.y
-                );
             } else {
                 this.moveTo({ x: World.myFlag.x, y: World.myFlag.y - 1 });
-                console.log(
-                    "Me Healer going to: " +
-                        World.myFlag.x +
-                        ", " +
-                        (World.myFlag.y - 1)
-                );
             }
         }
 
@@ -71,12 +56,6 @@ class Defender extends BaseCreep {
             this.moveTo({ x: World.myFlag.x + 1, y: World.myFlag.y + 1 });
         } else {
             this.moveTo({ x: World.myFlag.x - 1, y: World.myFlag.y - 1 });
-            console.log(
-                "Me Archer going to: " +
-                    (World.myFlag.x - 1) +
-                    ", " +
-                    (World.myFlag.y - 1)
-            );
         }
 
         // Attack nearby
