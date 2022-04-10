@@ -25,10 +25,10 @@ const roster: rosterEntry[] = [
 
 export function assignCreep(creep: BaseCreep): BaseCreep {
     for (let entry of roster) {
-        if (entry.composition[creep.loadout] > 0) {
+        if (creep.my === entry.my && entry.composition[creep.loadout] > 0) {
             entry.composition[creep.loadout]--;
             return new entry.role(creep.primitiveCreep);
         }
     }
-    return new BaseCreep(creep);
+    return new BaseCreep(creep.primitiveCreep);
 }
