@@ -27,7 +27,7 @@ export function assignCreep(creep: BaseCreep): BaseCreep {
     for (let entry of roster) {
         if (entry.composition[creep.loadout] > 0) {
             entry.composition[creep.loadout]--;
-            return new entry.role(creep); //This needs to be updated to the creep.primitave
+            return new entry.role(creep.primitiveCreep);
         }
     }
     return new BaseCreep(creep);
