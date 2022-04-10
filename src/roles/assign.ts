@@ -1,16 +1,27 @@
 import { Creep } from "game/prototypes";
-import { BaseCreep } from "./basecreep";
+import { BaseCreep, Loadout } from "./basecreep";
 import { TestRole } from "./testRole";
 
 interface rosterEntry {
     role: any;
     count: number;
+    my: boolean;
+    composition: {
+        [key in Loadout]: number;
+    };
 }
 
 const roster: rosterEntry[] = [
     {
         role: TestRole,
         count: 7,
+        my: true,
+
+        composition: {
+            archer: 2,
+            brawler: 0,
+            healer: 1,
+        },
     },
 ];
 
