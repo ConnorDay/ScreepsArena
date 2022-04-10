@@ -20,12 +20,9 @@ export function init() {
     const flags = getObjectsByPrototype(Flag);
     World.myStoredFlag = flags.find((f) => f.my);
     World.enemyStoredFlag = flags.find((f) => !f.my);
-<<<<<<< HEAD
     if (World.myFlag.x > 10) {
         World.bOttOm = true;
     } else {
         World.bOttOm = false;
     }
-=======
->>>>>>> 0c6f19b (support for multiple roles)
 }
