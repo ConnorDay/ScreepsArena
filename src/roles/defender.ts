@@ -74,3 +74,5 @@ class Defender extends BaseCreep {
             .with(Loadout.ARCHER, () => this.runArcher());
     }
 }
+
+export { Defender };
