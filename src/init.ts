@@ -7,17 +7,17 @@ import { Tower } from "./tower";
 import { World } from "./world";
 
 export function init() {
-	const creeps = getObjectsByPrototype(Creep).map((c) => assignCreep(c));
-	World.allies = creeps.filter((c) => c.my);
-	World.enemies = creeps.filter((c) => !c.my);
+    const creeps = getObjectsByPrototype(Creep).map((c) => assignCreep(c));
+    World.allies = creeps.filter((c) => c.my);
+    World.enemies = creeps.filter((c) => !c.my);
 
-	const towers = getObjectsByPrototype(StructureTower).map(
-		(t) => new Tower(t)
-	);
-	World.myTowers = towers.filter((t) => t.my);
-	World.enemyTowers = towers.filter((t) => !t.my);
+    const towers = getObjectsByPrototype(StructureTower).map(
+        (t) => new Tower(t)
+    );
+    World.myTowers = towers.filter((t) => t.my);
+    World.enemyTowers = towers.filter((t) => !t.my);
 
-	const flags = getObjectsByPrototype(Flag);
-	World.myStoredFlag = flags.find((f) => f.my);
-	World.enemyStoredFlag = flags.find((f) => !f.my);
+    const flags = getObjectsByPrototype(Flag);
+    World.myStoredFlag = flags.find((f) => f.my);
+    World.enemyStoredFlag = flags.find((f) => !f.my);
 }
