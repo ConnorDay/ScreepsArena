@@ -44,6 +44,7 @@ class BaseCreep extends Creep {
 
 	private _dangerUpdated: number = 0;
 	private _danger: number = 0;
+
 	constructor(creep: Creep) {
 		super();
 		this._primativeCreep = creep;

@@ -1,6 +1,13 @@
 import { Creep } from "game/prototypes";
 import { BaseCreep } from "../basecreep";
+import { TestRole } from "./testRole";
 
-export function asignCreep(creep: Creep): BaseCreep {
-	return new BaseCreep(creep);
+const roster = [
+	{
+		role: BaseCreep,
+	},
+];
+
+export function assignCreep(creep: Creep): BaseCreep {
+	return new TestRole(creep);
 }
