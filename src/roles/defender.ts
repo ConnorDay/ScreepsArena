@@ -1,5 +1,5 @@
 import { Creep, Id } from "game/prototypes";
-import { circle } from "game/visual";
+import { circle, text } from "game/visual";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
@@ -45,8 +45,21 @@ class Defender extends BaseCreep {
         }
 
         // Heal friends
-        let targets = this.targets;
-        let toHeal = targets.find((creep) => creep.danger > 0)?.primitiveCreep;
+        let targets = this.targets.map((c) => {
+            const ret = { creep: c, danger: c.danger };
+            switch (c.loadout) {
+                case Loadout.BRAWLER:
+                    ret.danger *= 2;
+                    break;
+                case Loadout.HEALER:
+                    ret.danger *= 1.5;
+                    break;
+            }
+            return ret;
+        });
+        let toHeal = targets.sort((prev, next) => {
+            return next.danger - prev.danger;
+        })[0]?.creep.primitiveCreep;
         if (toHeal) {
             this.heal(toHeal);
         }
@@ -71,6 +84,14 @@ class Defender extends BaseCreep {
     }
 
     public run() {
+        text(
+            `${this.danger}`,
+            { x: this.x, y: this.y - 0.5 },
+            {
+                font: "0.5",
+                opacity: 0.7,
+            }
+        );
         switch (this.loadout) {
             case Loadout.BRAWLER:
                 this.runBrawler();
