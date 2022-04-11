@@ -70,7 +70,6 @@ class BaseCreep {
     }
 
     public run() {
-        console.log(this.attackPriority);
         this.moveTo(World.enemyFlag);
     }
 
