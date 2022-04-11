@@ -18,5 +18,9 @@
     },
     "type": "module",
     "exclude": ["node_modules"],
-    "include": ["src", "build"]
+    "include": ["src", "build"],
+    "tsdocsOptions": {
+        "entryPoints": ["./src/index.ts"],
+        "out": "./docs"
+    }
 }
