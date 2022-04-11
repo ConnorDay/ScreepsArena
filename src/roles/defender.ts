@@ -1,15 +1,19 @@
-import { Creep } from "game/prototypes";
+import { Creep, Id } from "game/prototypes";
+import { circle } from "game/visual";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
 class Defender extends BaseCreep {
-    static firstHealer: Defender | undefined;
+    static firstHealer: Id<Creep> | undefined;
 
     constructor(creep: Creep) {
         super(creep);
         // Don the mantle
-        if (Defender.firstHealer === undefined) {
-            Defender.firstHealer = this;
+        if (
+            Defender.firstHealer === undefined &&
+            this.loadout === Loadout.HEALER
+        ) {
+            Defender.firstHealer = this.id;
         }
     }
 
@@ -27,13 +31,13 @@ class Defender extends BaseCreep {
     private runHealer() {
         // Get to around brawler
         if (World.bOttOm) {
-            if (Defender.firstHealer === this) {
+            if (Defender.firstHealer === this.id) {
                 this.moveTo({ x: World.myFlag.x + 1, y: World.myFlag.y });
             } else {
                 this.moveTo({ x: World.myFlag.x, y: World.myFlag.y + 1 });
             }
         } else {
-            if (Defender.firstHealer === this) {
+            if (Defender.firstHealer === this.id) {
                 this.moveTo({ x: World.myFlag.x - 1, y: World.myFlag.y });
             } else {
                 this.moveTo({ x: World.myFlag.x, y: World.myFlag.y - 1 });
