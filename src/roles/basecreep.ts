@@ -244,6 +244,10 @@ class BaseCreep {
         return this._primativeCreep.exists;
     }
 
+    public get id() {
+        return this._primativeCreep.id;
+    }
+
     //Functions//
     public move(direction: DirectionConstant): CreepMoveReturnCode {
         return this._primativeCreep.move(direction);
