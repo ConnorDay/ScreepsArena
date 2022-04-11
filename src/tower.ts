@@ -50,7 +50,9 @@ class Tower {
         //Priority 3
         if (this.store.getUsedCapacity("energy") === 50) {
             const target = findClosestByRange(this, targets);
-            this.attack(target.primitiveCreep);
+            if (target) {
+                this.attack(target.primitiveCreep);
+            }
             return;
         }
 
