@@ -41,7 +41,7 @@ export enum Loadout {
     ARCHER = "archer",
 }
 
-class BaseCreep extends Creep {
+class BaseCreep {
     //Extend creep so that we can just pass BaseCreep in to attack/ heal targets
     private _primativeCreep: Creep;
     private _loadout: Loadout;
@@ -59,7 +59,6 @@ class BaseCreep extends Creep {
     private _priority: number = 0;
 
     constructor(creep: Creep) {
-        super();
         this._primativeCreep = creep;
         if (this.hasPart(TOUGH)) {
             this._loadout = Loadout.BRAWLER;
@@ -145,10 +144,10 @@ class BaseCreep extends Creep {
 
         let damageThreat = 0;
         World.enemies.forEach((enemy) => {
-            damageThreat += enemy.getDamageToTarget(this);
+            damageThreat += enemy.getDamageToTarget(this._primativeCreep);
         });
         World.enemyTowers.forEach((tower) => {
-            damageThreat += tower.getDamageToTarget(this);
+            damageThreat += tower.getDamageToTarget(this._primativeCreep);
         });
 
         const damagePercent = damageThreat / this.hits;
