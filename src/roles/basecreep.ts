@@ -53,6 +53,10 @@ class BaseCreep extends Creep {
 
     private _dangerUpdated: number = 0;
     private _danger: number = 0;
+
+    private _priorityUpdated: number = 0;
+    private _priority: number = 0;
+
     constructor(creep: Creep) {
         super();
         this._primativeCreep = creep;
@@ -66,6 +70,7 @@ class BaseCreep extends Creep {
     }
 
     public run() {
+        console.log(this.attackPriority);
         this.moveTo(World.enemyFlag);
     }
 
@@ -89,6 +94,47 @@ class BaseCreep extends Creep {
         }
 
         return damage;
+    }
+
+    public get attackPriority(): number {
+        if (this._priorityUpdated === getTicks()) {
+            return this._priority;
+        }
+
+        const priority: { [key in BodyPartConstant]: number } = {
+            heal: 0,
+            ranged_attack: 0,
+            attack: 0,
+            move: 0,
+            tough: 0,
+            carry: 0,
+            claim: 0,
+            work: 0,
+        };
+
+        const bodyComp: { [key: string]: { hits: number; hitsMax: number } } =
+            {};
+        this.body.forEach((p) => {
+            if (bodyComp[p.type] === undefined) {
+                bodyComp[p.type] = {
+                    hits: 0,
+                    hitsMax: 0,
+                };
+            }
+            bodyComp[p.type].hits += p.hits;
+            bodyComp[p.type].hitsMax += 100;
+        });
+
+        let ap = 0;
+        for (let part in bodyComp) {
+            const entry = bodyComp[part];
+            const percentage = entry.hits / entry.hitsMax;
+            ap += percentage * priority[part as BodyPartConstant];
+        }
+
+        this._priorityUpdated = getTicks();
+        this._priority = ap + this.danger;
+        return this._priority;
     }
 
     public get danger(): number {
