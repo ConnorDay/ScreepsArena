@@ -34,7 +34,7 @@ class Tower {
         //Priority 1
         if (close.length > 0) {
             const target = findClosestByPath(World.myFlag, close);
-            this.attack(target);
+            this.attack(target.primitiveCreep);
             return;
         }
 
@@ -50,14 +50,14 @@ class Tower {
         //Priority 3
         if (this.store.getUsedCapacity("energy") === 50) {
             const target = findClosestByRange(this, targets);
-            this.attack(target);
+            this.attack(target.primitiveCreep);
             return;
         }
 
         return; // c:
     }
 
-    public getDamageToTarget(target: AnyCreep | Structure): number {
+    public getDamageToTarget(target: AnyCreep | BaseCreep | Structure): number {
         const dist = getRange(this, target);
         if (dist <= 5) {
             return 600;
