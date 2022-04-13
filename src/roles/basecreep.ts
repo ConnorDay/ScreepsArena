@@ -136,8 +136,10 @@ class BaseCreep {
         let ap = 0;
         for (let part in bodyComp) {
             const entry = bodyComp[part];
-            const percentage = entry.hits / entry.hitsMax;
-            ap += percentage * priority[part as BodyPartConstant];
+            if (entry.hits > 0) {
+                const percentage = entry.hitsMax / entry.hits;
+                ap += percentage * priority[part as BodyPartConstant];
+            }
         }
 
         this._priorityUpdated = getTicks();
