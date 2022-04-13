@@ -9,7 +9,7 @@ import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
 import { BaseCreep } from "./roles/basecreep";
 import { World } from "./world";
 
-class Tower {
+export class Tower {
     private _primitiveTower: StructureTower;
     constructor(tower: StructureTower) {
         this._primitiveTower = tower;
@@ -138,5 +138,3 @@ class Tower {
         return this._primitiveTower.findInRange(positions, range);
     }
 }
-
-export { Tower };

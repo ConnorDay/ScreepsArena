@@ -42,7 +42,11 @@ export enum Loadout {
     ARCHER = "archer",
 }
 
-class BaseCreep {
+/**
+ *  The class containing basic creep information.
+ *  Intended to be extended by specific roles, which can overwrite run().
+ */
+export class BaseCreep {
     //Extend creep so that we can just pass BaseCreep in to attack/ heal targets
     private _primativeCreep: Creep;
     private _loadout: Loadout;
@@ -291,5 +295,3 @@ class BaseCreep {
         return this._primativeCreep.findInRange(positions, range);
     }
 }
-
-export { BaseCreep };

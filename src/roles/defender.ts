@@ -3,7 +3,7 @@ import {} from "game/visual";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
-class Defender extends BaseCreep {
+export class Defender extends BaseCreep {
     static firstHealer: Id<Creep> | undefined;
 
     constructor(creep: Creep) {
@@ -97,5 +97,3 @@ class Defender extends BaseCreep {
         }
     }
 }
-
-export { Defender };
