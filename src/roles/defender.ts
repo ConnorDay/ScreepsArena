@@ -1,5 +1,6 @@
 import { Creep, Id } from "game/prototypes";
 import {} from "game/visual";
+import { getHighestAttackPriority } from "../utility";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
@@ -21,10 +22,9 @@ export class Defender extends BaseCreep {
         // Get on top of flag
         this.moveTo(World.myFlag);
         // Attack nearby
-        // TODO: Targeting logic
-        let targets = this.targets;
-        if (targets[0]) {
-            this.attack(this.targets[0].primitiveCreep);
+        let target = getHighestAttackPriority(this.targets);
+        if (target) {
+            this.attack(target.primitiveCreep);
         }
     }
 
@@ -77,9 +77,9 @@ export class Defender extends BaseCreep {
 
         // Attack nearby
         // TODO: Targeting logic
-        let targets = this.targets;
-        if (targets[0]) {
-            this.rangedAttack(targets[0].primitiveCreep);
+        let target = getHighestAttackPriority(this.targets);
+        if (target) {
+            this.rangedAttack(target.primitiveCreep);
         }
     }
 
