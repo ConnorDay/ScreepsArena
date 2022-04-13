@@ -1,5 +1,5 @@
 import { Creep, Id } from "game/prototypes";
-import { circle, text } from "game/visual";
+import {} from "game/visual";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
@@ -84,14 +84,6 @@ class Defender extends BaseCreep {
     }
 
     public run() {
-        text(
-            `${this.danger}`,
-            { x: this.x, y: this.y - 0.5 },
-            {
-                font: "0.5",
-                opacity: 0.7,
-            }
-        );
         switch (this.loadout) {
             case Loadout.BRAWLER:
                 this.runBrawler();
