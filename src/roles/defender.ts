@@ -5,6 +5,7 @@ import { BaseCreep, Loadout } from "./basecreep";
 
 export class Defender extends BaseCreep {
     static firstHealer: Id<Creep> | undefined;
+    public static brawler: BaseCreep;
 
     constructor(creep: Creep) {
         super(creep);
@@ -14,6 +15,13 @@ export class Defender extends BaseCreep {
             this.loadout === Loadout.HEALER
         ) {
             Defender.firstHealer = this.id;
+        }
+
+        if (
+            Defender.brawler === undefined &&
+            this.loadout === Loadout.BRAWLER
+        ) {
+            Defender.brawler = this;
         }
     }
 
