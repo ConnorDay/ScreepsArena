@@ -5,7 +5,7 @@ import { getObjectsByPrototype } from "game/utils";
 import { BaseCreep } from "./roles/basecreep";
 import { Tower } from "./tower";
 
-class worldClass {
+export class worldClass {
     private _allies: BaseCreep[] = [];
     private _alliesUpdated: number = 0;
     private _alliesAlive: BaseCreep[] = [];
