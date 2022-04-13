@@ -1,5 +1,10 @@
 import { AnyCreep, ResourceConstant, ScreepsReturnCode } from "game/constants";
-import { Store, Structure, StructureTower } from "game/prototypes";
+import {
+    RoomPosition,
+    Store,
+    Structure,
+    StructureTower,
+} from "game/prototypes";
 import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
 import { BaseCreep } from "./roles/basecreep";
 import { World } from "./world";
@@ -40,16 +45,27 @@ class Tower {
 
         //Priority 2
         if ((this.store.getUsedCapacity("energy") as number) >= 40) {
-            const target = targets.reduce((prev, curr) => {
-                //I need the getDanger function before this can function
+            const healTargets = this.findInRange(World.allies, 20);
+            const target = healTargets.reduce((prev, curr) => {
+                if (curr.danger > prev.danger) {
+                    return curr;
+                }
                 return prev;
-            }, World.allies[0]);
+            }, healTargets[0]);
+
+            if (target && target.danger > 0) {
+                this.heal(target.primitiveCreep);
+            }
         }
-        //Add the check that the creep is actually in danger here
 
         //Priority 3
         if (this.store.getUsedCapacity("energy") === 50) {
-            const target = findClosestByRange(this, targets);
+            const target = targets.reduce((prev, curr) => {
+                if (curr.attackPriority > prev.attackPriority) {
+                    return curr;
+                }
+                return prev;
+            }, targets[0]);
             if (target) {
                 this.attack(target.primitiveCreep);
             }
@@ -113,6 +129,13 @@ class Tower {
 
     public heal(target: AnyCreep): ScreepsReturnCode {
         return this._primitiveTower.heal(target);
+    }
+
+    public findInRange<T extends RoomPosition>(
+        positions: T[],
+        range: number
+    ): T[] {
+        return this._primitiveTower.findInRange(positions, range);
     }
 }
 
