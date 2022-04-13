@@ -7,6 +7,7 @@ import {
 } from "game/prototypes";
 import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
 import { BaseCreep } from "./roles/basecreep";
+import { getHighestAttackPriority, getHighestDanger } from "./utility";
 import { World } from "./world";
 
 class Tower {
@@ -46,12 +47,7 @@ class Tower {
         //Priority 2
         if ((this.store.getUsedCapacity("energy") as number) >= 40) {
             const healTargets = this.findInRange(World.allies, 20);
-            const target = healTargets.reduce((prev, curr) => {
-                if (curr.danger > prev.danger) {
-                    return curr;
-                }
-                return prev;
-            }, healTargets[0]);
+            const target = getHighestDanger(healTargets);
 
             if (target && target.danger > 0) {
                 this.heal(target.primitiveCreep);
@@ -60,12 +56,7 @@ class Tower {
 
         //Priority 3
         if (this.store.getUsedCapacity("energy") === 50) {
-            const target = targets.reduce((prev, curr) => {
-                if (curr.attackPriority > prev.attackPriority) {
-                    return curr;
-                }
-                return prev;
-            }, targets[0]);
+            const target = getHighestAttackPriority(targets);
             if (target) {
                 this.attack(target.primitiveCreep);
             }
