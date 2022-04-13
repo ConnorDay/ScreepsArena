@@ -28,6 +28,7 @@ import {
     StructureTower,
 } from "game/prototypes";
 import { getRange, getTicks } from "game/utils";
+import { text } from "game/visual";
 import { World } from "../world";
 
 interface possibleDamage {
@@ -70,6 +71,14 @@ class BaseCreep {
     }
 
     public run() {
+        text(
+            `${this.attackPriority}`,
+            { x: this.x, y: this.y - 0.5 },
+            {
+                font: "0.5",
+                opacity: 0.7,
+            }
+        );
         this.moveTo(World.enemyFlag);
     }
 
@@ -101,11 +110,11 @@ class BaseCreep {
         }
 
         const priority: { [key in BodyPartConstant]: number } = {
-            heal: 0,
-            ranged_attack: 0,
-            attack: 0,
-            move: 0,
-            tough: 0,
+            heal: 100,
+            ranged_attack: 10,
+            attack: 10,
+            move: 2,
+            tough: 1,
             carry: 0,
             claim: 0,
             work: 0,
@@ -132,7 +141,7 @@ class BaseCreep {
         }
 
         this._priorityUpdated = getTicks();
-        this._priority = ap + this.danger;
+        this._priority = ap;
         return this._priority;
     }
 
