@@ -1,14 +1,18 @@
 import { Creep, Id } from "game/prototypes";
-import { getHighestAttackPriority, getHighestDanger } from "../utility";
+import {
+    flipPos,
+    getHighestAttackPriority,
+    getHighestDanger,
+} from "../utility";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
 export class Skirmisher extends BaseCreep {
-    static lonelyArchers: Skirmisher[];
-    static lonelyHealers: Skirmisher[];
+    static lonelyArchers: Skirmisher[] = [];
+    static lonelyHealers: Skirmisher[] = [];
     static ASquad: boolean = true;
-    private _BSquad: boolean = false;
     private _buddy: Skirmisher | undefined;
+    public BSquad: boolean = false;
     public retreating: boolean = false;
 
     constructor(creep: Creep) {
@@ -18,11 +22,11 @@ export class Skirmisher extends BaseCreep {
             case Loadout.ARCHER:
                 if (Skirmisher.lonelyHealers.length > 0) {
                     const temp = Skirmisher.lonelyHealers.pop() as Skirmisher;
-                    this.buddy = temp;
+                    this._buddy = temp;
                     temp.buddy = this;
                     Skirmisher.ASquad = !Skirmisher.ASquad;
-                    this._BSquad = Skirmisher.ASquad;
-                    (<Skirmisher>this.buddy)._BSquad = Skirmisher.ASquad;
+                    this.BSquad = Skirmisher.ASquad;
+                    this.buddy.BSquad = Skirmisher.ASquad;
                 } else {
                     Skirmisher.lonelyArchers.push(this);
                 }
@@ -31,10 +35,10 @@ export class Skirmisher extends BaseCreep {
                 if (Skirmisher.lonelyArchers.length > 0) {
                     const temp = Skirmisher.lonelyArchers.pop() as Skirmisher;
                     this._buddy = temp;
-                    temp._buddy = this;
+                    temp.buddy = this;
                     Skirmisher.ASquad = !Skirmisher.ASquad;
-                    this._BSquad = Skirmisher.ASquad;
-                    (<Skirmisher>this.buddy)._BSquad = Skirmisher.ASquad;
+                    this.BSquad = Skirmisher.ASquad;
+                    this.buddy.BSquad = Skirmisher.ASquad;
                 } else {
                     Skirmisher.lonelyHealers.push(this);
                 }
@@ -52,7 +56,11 @@ export class Skirmisher extends BaseCreep {
                 this.retreating = false;
                 this.buddy.retreating = false;
             }
-            this.moveTo(World.retreatPos);
+            if (this.BSquad) {
+                this.moveTo(World.retreatPos);
+            } else {
+                this.moveTo(flipPos(World.retreatPos));
+            }
         } else {
             this.moveTo(this.buddy);
         }
@@ -71,11 +79,17 @@ export class Skirmisher extends BaseCreep {
                 this.retreating = true;
                 this.buddy.retreating = true;
             }
-            this.moveTo(World.attackPos);
+            if (this.BSquad) {
+                this.moveTo(World.attackPos);
+            } else {
+                this.moveTo(flipPos(World.attackPos));
+            }
         }
-        this.rangedAttack(
-            getHighestAttackPriority(this.targets).primitiveCreep
-        );
+        if (this.targets.length > 0) {
+            this.rangedAttack(
+                getHighestAttackPriority(this.targets).primitiveCreep
+            );
+        }
     }
 
     public run() {
