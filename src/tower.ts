@@ -6,21 +6,24 @@ import {
     StructureTower,
 } from "game/prototypes";
 import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
+import { Defender } from "./roles/defender";
 import { BaseCreep } from "./roles/basecreep";
 import { getHighestAttackPriority, getHighestDanger } from "./utility";
 import { World } from "./world";
 
 export class Tower {
     private _primitiveTower: StructureTower;
+    private static _brawlerHealed: number = 0;
     constructor(tower: StructureTower) {
         this._primitiveTower = tower;
     }
 
     /**
      * Priority:
-     *  1. Attack any enemy creep that's within 5 tiles of the flag
-     *  2. Heal any allied creep that's within 50 tiles of the tower and while energy is > 50%
-     *  3. Attack any enemy creep that's within 50 tiles and while energy == 100%?
+     *  1. Heal the brawler if it has 400 missing health
+     *  2. Attack any enemy creep that's within 5 tiles of the flag
+     *  3. Heal any allied creep that's within 50 tiles of the tower and while energy is > 50%
+     *  4. Attack any enemy creep that's within 50 tiles and while energy == 100%?
      */
     public run() {
         const close: BaseCreep[] = [];
@@ -38,13 +41,24 @@ export class Tower {
         });
 
         //Priority 1
+        if ((this.store.getUsedCapacity("energy") as number) >= 10) {
+            if (Defender.brawler && Defender.brawler.exists) {
+                const brawler = Defender.brawler;
+                const missingHealth = brawler.hitsMax - brawler.hits;
+                if (missingHealth >= 100) {
+                    this.heal(brawler.primitiveCreep);
+                }
+            }
+        }
+
+        //Priority 2
         if (close.length > 0) {
-            const target = findClosestByPath(World.myFlag, close);
+            const target = getHighestAttackPriority(close);
             this.attack(target.primitiveCreep);
             return;
         }
 
-        //Priority 2
+        //Priority 3
         if ((this.store.getUsedCapacity("energy") as number) >= 40) {
             const healTargets = this.findInRange(World.allies, 20);
             const target = getHighestDanger(healTargets);
@@ -54,7 +68,7 @@ export class Tower {
             }
         }
 
-        //Priority 3
+        //Priority 4
         if (this.store.getUsedCapacity("energy") === 50) {
             const target = getHighestAttackPriority(targets);
             if (target) {
