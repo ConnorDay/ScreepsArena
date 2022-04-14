@@ -1,3 +1,4 @@
+import { RoomPosition } from "game/prototypes";
 import { BaseCreep } from "./roles/basecreep";
 
 export function getHighestAttackPriority(creeps: BaseCreep[]): BaseCreep {
@@ -16,4 +17,8 @@ export function getHighestDanger(creeps: BaseCreep[]): BaseCreep {
         }
         return prev;
     }, creeps[0]);
+}
+
+export function flipPos(pos: RoomPosition): RoomPosition {
+    return { x: pos.y, y: pos.x };
 }

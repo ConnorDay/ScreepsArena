@@ -1,6 +1,11 @@
 import { Flag } from "arena";
 import { getTicks } from "game";
-import { Creep, StructureTower } from "game/prototypes";
+import {
+    Creep,
+    GameObject,
+    RoomPosition,
+    StructureTower,
+} from "game/prototypes";
 import { getObjectsByPrototype } from "game/utils";
 import { BaseCreep } from "./roles/basecreep";
 import { Tower } from "./tower";
@@ -19,6 +24,8 @@ export class worldClass {
     myStoredFlag: Flag | undefined;
     enemyStoredFlag: Flag | undefined;
     bOttOm: boolean | undefined;
+    attackPos: RoomPosition = { x: 0, y: 0 };
+    retreatPos: RoomPosition = { x: 0, y: 0 };
 
     public get allies(): BaseCreep[] {
         if (this._alliesUpdated === getTicks()) {
