@@ -1,3 +1,4 @@
+import { ERR_NOT_IN_RANGE } from "game/constants";
 import { Creep, Id } from "game/prototypes";
 import {
     flipPos,
@@ -50,8 +51,8 @@ export class Skirmisher extends BaseCreep {
         if (this.retreating) {
             if (
                 this.findInRange(World.enemies, 4).length == 0 &&
-                this.hits > 600 &&
-                this.buddy.hits > 600
+                this.hits === 800 &&
+                this.buddy.hits > 700
             ) {
                 this.retreating = false;
                 this.buddy.retreating = false;
@@ -64,7 +65,12 @@ export class Skirmisher extends BaseCreep {
         } else {
             this.moveTo(this.buddy);
         }
-        this.heal(getHighestDanger([this, this.buddy]).primitiveCreep);
+        let res = this.heal(
+            getHighestDanger([this, this.buddy]).primitiveCreep
+        );
+        if (res === ERR_NOT_IN_RANGE) {
+            this.rangedHeal(this.buddy.primitiveCreep);
+        }
     }
 
     private runArcher() {
@@ -73,16 +79,16 @@ export class Skirmisher extends BaseCreep {
         } else {
             if (
                 (this.findInRange(World.enemies, 3).length != 0 &&
-                    this.hits < 500) ||
-                this.buddy.hits < 600
+                    (this.hits < 500 || this.buddy.hits < 600)) ||
+                this.findInRange(World.enemies, 3).length > 3
             ) {
                 this.retreating = true;
                 this.buddy.retreating = true;
             }
             if (this.BSquad) {
-                this.moveTo(World.attackPos);
+                this.moveTo(World.enemyFlag);
             } else {
-                this.moveTo(flipPos(World.attackPos));
+                this.moveTo(flipPos(World.enemyFlag));
             }
         }
         if (this.targets.length > 0) {
