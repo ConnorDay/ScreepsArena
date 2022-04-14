@@ -1,6 +1,7 @@
 import { Creep } from "game/prototypes";
 import { BaseCreep, Loadout } from "./basecreep";
 import { Defender } from "./defender";
+import { Skirmisher } from "./skirmisher";
 
 interface rosterEntry {
     role: any;
@@ -19,6 +20,16 @@ const roster: rosterEntry[] = [
             archer: 1,
             brawler: 1,
             healer: 2,
+        },
+    },
+    {
+        role: Skirmisher,
+        my: true,
+
+        composition: {
+            archer: 4,
+            brawler: 0,
+            healer: 4,
         },
     },
 ];

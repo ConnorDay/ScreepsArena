@@ -25,7 +25,11 @@ export function init() {
     World.enemyStoredFlag = flags.find((f) => !f.my);
     if (World.myFlag.x > 10) {
         World.bOttOm = true;
+        World.attackPos = { x: 68, y: 37 };
+        World.retreatPos = { x: 98, y: 95 };
     } else {
         World.bOttOm = false;
+        World.attackPos = { x: 62, y: 31 };
+        World.retreatPos = { x: 4, y: 1 };
     }
 }
