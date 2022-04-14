@@ -6,7 +6,7 @@ import {
     StructureTower,
 } from "game/prototypes";
 import { findClosestByPath, findClosestByRange, getRange } from "game/utils";
-import { Defender } from "./roles";
+import { Defender } from "./roles/defender";
 import { BaseCreep } from "./roles/basecreep";
 import { getHighestAttackPriority, getHighestDanger } from "./utility";
 import { World } from "./world";
@@ -52,11 +52,8 @@ export class Tower {
         }
 
         //Priority 2
-        if (
-            close.length > 0 &&
-            (this.store.getUsedCapacity("energy") as number) >= 20
-        ) {
-            const target = findClosestByPath(World.myFlag, close);
+        if (close.length > 0) {
+            const target = getHighestAttackPriority(close);
             this.attack(target.primitiveCreep);
             return;
         }
