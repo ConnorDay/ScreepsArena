@@ -45,7 +45,7 @@ export class Tower {
             if (Defender.brawler && Defender.brawler.exists) {
                 const brawler = Defender.brawler;
                 const missingHealth = brawler.hitsMax - brawler.hits;
-                if (missingHealth >= 400) {
+                if (missingHealth >= 100) {
                     this.heal(brawler.primitiveCreep);
                 }
             }
