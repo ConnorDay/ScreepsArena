@@ -127,6 +127,10 @@ export class Tower {
         return this._primitiveTower.cooldown;
     }
 
+    public get exists(): boolean {
+        return this._primitiveTower.exists;
+    }
+
     //functions//
     public attack(target: AnyCreep | Structure): ScreepsReturnCode {
         return this._primitiveTower.attack(target);
