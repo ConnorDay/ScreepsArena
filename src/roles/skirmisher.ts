@@ -63,7 +63,7 @@ export class Skirmisher extends BaseCreep {
                 this.moveTo(flipPos(World.retreatPos));
             }
         } else {
-            this.moveTo(this.buddy);
+            this.moveTo(this.buddy, { ignore: [this.buddy.primitiveCreep] });
         }
         let res = this.heal(
             getHighestDanger([this, this.buddy]).primitiveCreep
@@ -75,7 +75,7 @@ export class Skirmisher extends BaseCreep {
 
     private runArcher() {
         if (this.retreating) {
-            this.moveTo(this.buddy);
+            this.moveTo(this.buddy, { ignore: [this.buddy.primitiveCreep] });
         } else {
             if (
                 (this.findInRange(World.enemies, 3).length != 0 &&
