@@ -1,28 +1,34 @@
-import { Creep, Id } from "game/prototypes";
+import { Creep, Id, RoomPosition } from "game/prototypes";
 import {} from "game/visual";
 import { getHighestAttackPriority } from "../utility";
 import { World } from "../world";
 import { BaseCreep, Loadout } from "./basecreep";
 
 export class Defender extends BaseCreep {
-    static firstHealer: Id<Creep> | undefined;
+    public static firstHealer: BaseCreep;
+    public static secondHealer: BaseCreep;
     public static brawler: BaseCreep;
+    public static archer: BaseCreep;
 
     constructor(creep: Creep) {
         super(creep);
-        // Don the mantle
-        if (
-            Defender.firstHealer === undefined &&
-            this.loadout === Loadout.HEALER
-        ) {
-            Defender.firstHealer = this.id;
-        }
 
-        if (
-            Defender.brawler === undefined &&
-            this.loadout === Loadout.BRAWLER
-        ) {
-            Defender.brawler = this;
+        // Don the mantle
+        switch (this.loadout) {
+            case Loadout.ARCHER:
+                Defender.archer = this;
+                break;
+            case Loadout.BRAWLER:
+                Defender.brawler = this;
+                break;
+            case Loadout.HEALER:
+                if (Defender.firstHealer === undefined) {
+                    Defender.firstHealer = this;
+                } else {
+                    //I don't know if we'll ever need the second healer, but might as well populate it
+                    Defender.secondHealer = this;
+                }
+                break;
         }
     }
 
@@ -37,20 +43,32 @@ export class Defender extends BaseCreep {
     }
 
     private runHealer() {
+        let moveTarget: RoomPosition;
         // Get to around brawler
         if (World.bOttOm) {
-            if (Defender.firstHealer === this.id) {
-                this.moveTo({ x: World.myFlag.x + 1, y: World.myFlag.y });
+            if (Defender.firstHealer.id === this.id) {
+                moveTarget = { x: World.myFlag.x + 1, y: World.myFlag.y };
             } else {
-                this.moveTo({ x: World.myFlag.x, y: World.myFlag.y + 1 });
+                moveTarget = { x: World.myFlag.x, y: World.myFlag.y + 1 };
             }
         } else {
-            if (Defender.firstHealer === this.id) {
-                this.moveTo({ x: World.myFlag.x - 1, y: World.myFlag.y });
+            if (Defender.firstHealer.id === this.id) {
+                moveTarget = { x: World.myFlag.x - 1, y: World.myFlag.y };
             } else {
-                this.moveTo({ x: World.myFlag.x, y: World.myFlag.y - 1 });
+                moveTarget = { x: World.myFlag.x, y: World.myFlag.y - 1 };
             }
         }
+
+        //Give up their life for the flag
+        if (!Defender.brawler.exists && !Defender.archer.exists) {
+            if (this.id === Defender.firstHealer.id) {
+                moveTarget = World.myFlag as RoomPosition;
+            } else if (!Defender.firstHealer.exists) {
+                moveTarget = World.myFlag as RoomPosition;
+            }
+        }
+
+        this.moveTo(moveTarget);
 
         // Heal friends
         let targets = this.targets.map((c) => {
@@ -77,14 +95,21 @@ export class Defender extends BaseCreep {
 
     private runArcher() {
         // Get in position
+        let moveTarget: RoomPosition;
         if (World.bOttOm) {
-            this.moveTo({ x: World.myFlag.x + 1, y: World.myFlag.y + 1 });
+            moveTarget = { x: World.myFlag.x + 1, y: World.myFlag.y + 1 };
         } else {
-            this.moveTo({ x: World.myFlag.x - 1, y: World.myFlag.y - 1 });
+            moveTarget = { x: World.myFlag.x - 1, y: World.myFlag.y - 1 };
         }
 
+        // Move onto the flag if the brawler is dead
+        if (!Defender.brawler.exists) {
+            moveTarget = World.myFlag as RoomPosition;
+        }
+
+        this.moveTo(moveTarget);
+
         // Attack nearby
-        // TODO: Targeting logic
         let target = getHighestAttackPriority(this.targets);
         if (target) {
             this.rangedAttack(target.primitiveCreep);
