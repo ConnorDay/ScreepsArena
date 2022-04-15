@@ -19,8 +19,14 @@ export class worldClass {
     private _enemiesUpdated: number = 0;
     private _enemiesAlive: BaseCreep[] = [];
 
-    myTowers: Tower[] = [];
-    enemyTowers: Tower[] = [];
+    private _myTowers: Tower[] = [];
+    private _myTowersUpdated: number = 0;
+    private _myTowersStanding: Tower[] = [];
+
+    private _enemyTowers: Tower[] = [];
+    private _enemyTowersUpdated: number = 0;
+    private _enemyTowersStanding: Tower[] = [];
+
     myStoredFlag: Flag | undefined;
     enemyStoredFlag: Flag | undefined;
     bOttOm: boolean | undefined;
@@ -49,6 +55,30 @@ export class worldClass {
     }
     public set enemies(a: BaseCreep[]) {
         this._enemies = a;
+    }
+
+    public get myTowers(): Tower[] {
+        if (this._myTowersUpdated === getTicks()) {
+            return this._myTowersStanding;
+        }
+        this._myTowersUpdated = getTicks();
+        this._myTowersStanding = this._myTowers.filter((t) => t.exists);
+        return this._myTowersStanding;
+    }
+    public set myTowers(towers: Tower[]) {
+        this._myTowers = towers;
+    }
+
+    public get enemyTowers(): Tower[] {
+        if (this._enemyTowersUpdated === getTicks()) {
+            return this._enemyTowersStanding;
+        }
+        this._enemyTowersUpdated = getTicks();
+        this._enemyTowersStanding = this._enemyTowers.filter((t) => t.exists);
+        return this._enemyTowersStanding;
+    }
+    public set enemyTowers(towers: Tower[]) {
+        this._enemyTowers = towers;
     }
 
     public get myFlag(): Flag {
